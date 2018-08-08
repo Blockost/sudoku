@@ -1,8 +1,8 @@
 <div class="grid">
 
-  <ng-container *ngFor="let row of board.matrix">
-    <ng-container *ngFor="let item of row">
-      <div class="box">{{item}}</div>
+  <ng-container *ngFor="let row of board.matrix; let i = index;">
+    <ng-container *ngFor="let box of row; let j = index;">
+      <div class="box" [class.color-light-green]="box.isFocused" (click)="onClick(i, j)">{{box.value}}</div>
     </ng-container>
   </ng-container>
 

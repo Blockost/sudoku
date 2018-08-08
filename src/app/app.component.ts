@@ -11,5 +11,13 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.board = new Board(9);
+    this.board.generate();
+  }
+
+  onClick(rowIndex: number, colIndex: number) {
+    this.board.clearFocus();
+    this.board
+      .getCell(rowIndex, colIndex)
+      .neighbors.forEach((cell) => cell.focus());
   }
 }
