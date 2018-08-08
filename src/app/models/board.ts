@@ -22,26 +22,24 @@ export class Board {
       }
     }
 
-    // Assign neighbors to cells
-    this._matrix.forEach((row) =>
-      row.forEach((cell) => {
-        cell.neighbors = this.getNeighbors(cell);
-      })
-    );
-  }
-
-  generate() {
     // Retrieve all cells
     const allCells: Cell[] = [];
     this._matrix.forEach((row) => row.forEach((cell) => allCells.push(cell)));
 
-    this.doGenerate(allCells);
+    // Assign neighbors to each cell
+    allCells.forEach((cell) => {
+      cell.neighbors = this.getNeighbors(cell);
+    });
+
+    // For each cell, assign a coherent value based on its neighbors
+    this.assignValueToCells(allCells);
   }
 
-  private doGenerate(remainingCells: Cell[]): boolean {
+  private assignValueToCells(remainingCells: Cell[]): boolean {
     const cell = remainingCells.shift();
-    const possibleValues = this.getPossibleValuesForCell(cell);
-    this.shuffle(possibleValues);
+    const possibleValues = this.shuffleArray(
+      this.getPossibleValuesForCell(cell)
+    );
 
     for (const value of possibleValues) {
       cell.value = value;
@@ -52,7 +50,7 @@ export class Board {
       }
 
       // Here's the recursion
-      if (this.doGenerate(remainingCells)) {
+      if (this.assignValueToCells(remainingCells)) {
         return true;
       }
     }
@@ -65,11 +63,15 @@ export class Board {
     return false;
   }
 
-  private shuffle(array) {
-    for (let i = array.length - 1; i > 0; i--) {
+  private shuffleArray(array: number[]): number[] {
+    const _array = array;
+
+    for (let i = _array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
+      [_array[i], _array[j]] = [_array[j], _array[i]];
     }
+
+    return _array;
   }
 
   get matrix() {
@@ -80,87 +82,76 @@ export class Board {
     return this.matrix[rowIndex][colIndex];
   }
 
-  isCellValid(rowIndex: number, colIndex): boolean {
+  isCellValid(cell: Cell): boolean {
     return (
-      this.isRowValid(rowIndex) &&
-      this.isColumnValid(colIndex) &&
-      this.isSquareValid(rowIndex, colIndex)
+      this.isRowValid(cell) &&
+      this.isColumnValid(cell) &&
+      this.isSquareValid(cell)
     );
   }
 
   /**
    * Checks whether a given row is valid against the game's rule
-   *
-   * @param index the index of the row to check
    */
-  isRowValid(index: number): boolean {
-    return this.validate(this.getRow(index).map((box) => box.value));
+  isRowValid(cell: Cell): boolean {
+    return this.validate(this.getRow(cell).map((c) => c.value));
   }
 
   /**
    * Checks whether a given row is valid against the game's rule
-   *
-   * @param index the index of the column to check
    */
-  isColumnValid(index: number): boolean {
-    return this.validate(this.getColumn(index).map((box) => box.value));
+  isColumnValid(cell: Cell): boolean {
+    return this.validate(this.getColumn(cell).map((c) => c.value));
   }
 
-  isSquareValid(rowIndex: number, colIndex: number): boolean {
-    return this.validate(
-      this.getSquare(rowIndex, colIndex).map((box) => box.value)
-    );
+  isSquareValid(cell: Cell): boolean {
+    return this.validate(this.getSquare(cell).map((c) => c.value));
   }
 
   clearFocus() {
-    this.matrix.map((row) => row.map((box) => box.unfocus()));
+    this.matrix.map((row) => row.map((cell) => cell.unfocus()));
   }
 
   /**
    * Retreives all the neighbors to a given cell.
    * Neighbors are all the cells on the same line, column and square.
-   *
-   * @param cell the cell we want to search the neighbors of
    */
   private getNeighbors(cell: Cell): Set<Cell> {
     const neighbors = new Set<Cell>();
-    const rowIndex = cell.coord.x;
-    const colIndex = cell.coord.y;
 
-    this.getRow(rowIndex).forEach((c) => neighbors.add(c));
-    this.getColumn(colIndex).forEach((c) => neighbors.add(c));
-    this.getSquare(rowIndex, colIndex).forEach((c) => neighbors.add(c));
+    this.getRow(cell).forEach((c) => neighbors.add(c));
+    this.getColumn(cell).forEach((c) => neighbors.add(c));
+    this.getSquare(cell).forEach((c) => neighbors.add(c));
 
     return neighbors;
   }
 
-  private getRow(index: number): Cell[] {
-    return this._matrix[index];
+  private getRow(cell: Cell): Cell[] {
+    return this._matrix[cell.coord.x];
   }
 
-  private getColumn(index: number): Cell[] {
-    return this._matrix.map((row) => row[index]);
+  private getColumn(cell: Cell): Cell[] {
+    return this._matrix.map((row) => row[cell.coord.y]);
   }
 
-  private getSquare(rowIndex: number, colIndex: number): Cell[] {
+  private getSquare(cell: Cell): Cell[] {
     const squareSize = Math.sqrt(this.size);
-    const squareStartRow = Math.floor(rowIndex / squareSize) * squareSize;
-    const squareStartColumn = Math.floor(colIndex / squareSize) * squareSize;
+    const squareStartRow = Math.floor(cell.coord.x / squareSize) * squareSize;
+    const squareStartColumn =
+      Math.floor(cell.coord.y / squareSize) * squareSize;
 
-    const boxes = [];
+    const cells = [];
     for (let i = squareStartRow; i < squareStartRow + squareSize; i++) {
       for (let j = squareStartColumn; j < squareStartColumn + squareSize; j++) {
-        boxes.push(this._matrix[i][j]);
+        cells.push(this._matrix[i][j]);
       }
     }
 
-    return boxes;
+    return cells;
   }
 
   /**
    * Validates the given number against Sodoku game's rules: each number must be unique in its `area`.
-   *
-   * @param array the array of number to validate
    */
   private validate(array: number[]): boolean {
     array = array.filter((item) => item !== 0);
@@ -169,7 +160,10 @@ export class Board {
     return array_size === set_boxes.size;
   }
 
-  private getPossibleValuesForCell(cell: Cell) {
+  /**
+   * Get possible values for a given cell based on the values already asigned to its neighbors.
+   */
+  private getPossibleValuesForCell(cell: Cell): number[] {
     const possibleValues: number[] = [];
     for (let i = this.NUM_MIN; i <= this.NUM_MAX; i++) {
       possibleValues.push(i);
@@ -189,7 +183,13 @@ export class Board {
     return possibleValues;
   }
 
-  private getRandom(): number {
-    return Math.floor(Math.random() * this.NUM_MAX + this.NUM_MIN);
+  /**
+   * Get a random number between two values.
+   *
+   * @param min min value
+   * @param max max value
+   */
+  private getRandomNumber(min: number, max: number): number {
+    return Math.floor(Math.random() * max + min);
   }
 }

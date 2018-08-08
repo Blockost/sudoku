@@ -11,7 +11,6 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.board = new Board(9);
-    this.board.generate();
   }
 
   onClick(rowIndex: number, colIndex: number) {
