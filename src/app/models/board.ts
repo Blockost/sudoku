@@ -31,18 +31,45 @@ export class Board {
   }
 
   generate() {
-    // Based on neighbors, assign correct value to each cell
-    this._matrix.forEach((row) =>
-      row.forEach((cell) => {
-        console.log(
-          `Assigning value for cell (${cell.coord.x}, ${cell.coord.y})`
-        );
+    // Retrieve all cells
+    const allCells: Cell[] = [];
+    this._matrix.forEach((row) => row.forEach((cell) => allCells.push(cell)));
 
-        console.log(`Possible values: `, this.getPossibleValuesForCell(cell));
+    this.doGenerate(allCells);
+  }
 
-        cell.value = this.getPossibleValuesForCell(cell)[0];
-      })
-    );
+  private doGenerate(remainingCells: Cell[]): boolean {
+    const cell = remainingCells.shift();
+    const possibleValues = this.getPossibleValuesForCell(cell);
+    this.shuffle(possibleValues);
+
+    for (const value of possibleValues) {
+      cell.value = value;
+
+      // Base case: it is the last cell to be processed
+      if (remainingCells.length === 0) {
+        return true;
+      }
+
+      // Here's the recursion
+      if (this.doGenerate(remainingCells)) {
+        return true;
+      }
+    }
+
+    // Being here means that we've been trying all the possible values
+    // but all of them have failed...Error happened before.
+    // Reset cell value, put back cell in the list and re-do
+    cell.value = 0;
+    remainingCells.unshift(cell);
+    return false;
+  }
+
+  private shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]];
+    }
   }
 
   get matrix() {
