@@ -56,22 +56,11 @@ export class Board {
     }
 
     // Being here means that we've been trying all the possible values
-    // but all of them have failed...Error happened before.
-    // Reset cell value, put back cell in the list and re-do
+    // but all of them have failed. So, an error have happened before.
+    // Reset cell value, put it back in the list and backtrack
     cell.value = 0;
     remainingCells.unshift(cell);
     return false;
-  }
-
-  private shuffleArray(array: number[]): number[] {
-    const _array = array;
-
-    for (let i = _array.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [_array[i], _array[j]] = [_array[j], _array[i]];
-    }
-
-    return _array;
   }
 
   get matrix() {
@@ -184,10 +173,21 @@ export class Board {
   }
 
   /**
+   * Shuffle the values in the given array and returns it. The given array is NOT modified.
+   */
+  private shuffleArray(array: number[]): number[] {
+    const _array = array;
+
+    for (let i = _array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [_array[i], _array[j]] = [_array[j], _array[i]];
+    }
+
+    return _array;
+  }
+
+  /**
    * Get a random number between two values.
-   *
-   * @param min min value
-   * @param max max value
    */
   private getRandomNumber(min: number, max: number): number {
     return Math.floor(Math.random() * max + min);
