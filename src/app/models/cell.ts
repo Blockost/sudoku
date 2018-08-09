@@ -5,11 +5,24 @@ import { Coord } from './coord';
  */
 export class Cell {
   neighbors: Set<Cell>;
+  userValue: number;
   isAssignable = false;
+  private _realValue: number;
   private _isVisible = true;
   private _isFocused = false;
 
-  constructor(public value: number, public coord: Coord) {}
+  constructor(public coord: Coord) {}
+
+  get realValue() {
+    return this._realValue;
+  }
+
+  set realValue(value: number) {
+    this._realValue = value;
+    // At first, user value is the same as the real value
+    // It will be wiped when we will hide some cells at random during board init
+    this.userValue = value;
+  }
 
   get isFocused(): boolean {
     return this._isFocused;

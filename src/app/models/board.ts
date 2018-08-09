@@ -7,25 +7,26 @@ import { Coord } from './coord';
 export class Board {
   private readonly NUM_MIN = 1;
   private readonly NUM_MAX = 9;
-  private readonly NUM_CELLS_TO_HIDE = 2;
+  private readonly NUM_CELLS_TO_HIDE = 1;
+  private readonly CELLS_TO_FILL = [];
   private size: number;
-  private _matrix: Cell[][];
+  private matrix: Cell[][];
 
   constructor(size: number) {
-    this._matrix = [];
+    this.matrix = [];
     this.size = size;
 
     // Generate a board full of zero
     for (let i = 0; i < this.size; i++) {
-      this._matrix[i] = [];
+      this.matrix[i] = [];
       for (let j = 0; j < this.size; j++) {
-        this._matrix[i][j] = new Cell(0, new Coord(i, j));
+        this.matrix[i][j] = new Cell(new Coord(i, j));
       }
     }
 
     // Retrieve all cells
     const allCells: Cell[] = [];
-    this._matrix.forEach((row) => row.forEach((cell) => allCells.push(cell)));
+    this.matrix.forEach((row) => row.forEach((cell) => allCells.push(cell)));
 
     // Assign neighbors to each cell
     allCells.forEach((cell) => {
@@ -37,75 +38,42 @@ export class Board {
 
     // Hide some cells at random
     // TODO: 2018-08-08 Make it based on difficulty level
-    this._matrix.forEach((row) => {
+    this.matrix.forEach((row) => {
       for (let i = 0; i < this.NUM_CELLS_TO_HIDE; i++) {
         const cell = row[this.getRandomNumber(0, 8)];
         cell.hide();
         cell.isAssignable = true;
+        cell.userValue = 0;
+        this.CELLS_TO_FILL.push(cell);
       }
     });
   }
 
-  private assignValueToCells(remainingCells: Cell[]): boolean {
-    const cell = remainingCells.shift();
-    const possibleValues = this.shuffleArray(
-      this.getPossibleValuesForCell(cell)
-    );
-
-    for (const value of possibleValues) {
-      cell.value = value;
-
-      // Base case: no remaining cells to be processed
-      if (remainingCells.length === 0) {
-        return true;
-      }
-
-      // Here's the recursion
-      if (this.assignValueToCells(remainingCells)) {
-        return true;
-      }
-    }
-
-    // Being here means that we've been trying all the possible values
-    // but all of them have failed. So, an error have happened before.
-    // Reset cell value, put it back in the list and backtrack
-    cell.value = 0;
-    remainingCells.unshift(cell);
-    return false;
-  }
-
-  get matrix() {
-    return this._matrix;
+  getMatrix() {
+    return this.matrix;
   }
 
   getCell(rowIndex: number, colIndex: number): Cell {
     return this.matrix[rowIndex][colIndex];
   }
 
-  isCellValid(cell: Cell): boolean {
-    return (
-      this.isRowValid(cell) &&
-      this.isColumnValid(cell) &&
-      this.isSquareValid(cell)
+  getCellsToFill(): Cell[] {
+    return this.CELLS_TO_FILL;
+  }
+
+  getRemainingCellsToFill(): Cell[] {
+    return this.CELLS_TO_FILL.filter((cell) => cell.userValue === 0);
+  }
+
+  public validate(): boolean {
+    // TODO: 2018-08-09 To remove when game is ready for production
+    console.log(
+      this.CELLS_TO_FILL.filter((cell) => cell.userValue !== cell.realValue)
     );
-  }
-
-  /**
-   * Checks whether a given row is valid against the game's rule
-   */
-  isRowValid(cell: Cell): boolean {
-    return this.validate(this.getRow(cell).map((c) => c.value));
-  }
-
-  /**
-   * Checks whether a given row is valid against the game's rule
-   */
-  isColumnValid(cell: Cell): boolean {
-    return this.validate(this.getColumn(cell).map((c) => c.value));
-  }
-
-  isSquareValid(cell: Cell): boolean {
-    return this.validate(this.getSquare(cell).map((c) => c.value));
+    return (
+      this.CELLS_TO_FILL.filter((cell) => cell.userValue !== cell.realValue)
+        .length === 0
+    );
   }
 
   clearFocus() {
@@ -127,11 +95,11 @@ export class Board {
   }
 
   private getRow(cell: Cell): Cell[] {
-    return this._matrix[cell.coord.x];
+    return this.matrix[cell.coord.x];
   }
 
   private getColumn(cell: Cell): Cell[] {
-    return this._matrix.map((row) => row[cell.coord.y]);
+    return this.matrix.map((row) => row[cell.coord.y]);
   }
 
   private getSquare(cell: Cell): Cell[] {
@@ -143,21 +111,39 @@ export class Board {
     const cells = [];
     for (let i = squareStartRow; i < squareStartRow + squareSize; i++) {
       for (let j = squareStartColumn; j < squareStartColumn + squareSize; j++) {
-        cells.push(this._matrix[i][j]);
+        cells.push(this.matrix[i][j]);
       }
     }
 
     return cells;
   }
 
-  /**
-   * Validates the given number against Sodoku game's rules: each number must be unique in its `area`.
-   */
-  private validate(array: number[]): boolean {
-    array = array.filter((item) => item !== 0);
-    const array_size = array.length;
-    const set_boxes = new Set(array);
-    return array_size === set_boxes.size;
+  private assignValueToCells(remainingCells: Cell[]): boolean {
+    const cell = remainingCells.shift();
+    const possibleValues = this.shuffleArray(
+      this.getPossibleValuesForCell(cell)
+    );
+
+    for (const value of possibleValues) {
+      cell.realValue = value;
+
+      // Base case: no remaining cells to be processed
+      if (remainingCells.length === 0) {
+        return true;
+      }
+
+      // Here's the recursion
+      if (this.assignValueToCells(remainingCells)) {
+        return true;
+      }
+    }
+
+    // Being here means that we've been trying all the possible values
+    // but all of them have failed. So, an error have happened before.
+    // Reset cell value, put it back in the list and backtrack
+    cell.realValue = 0;
+    remainingCells.unshift(cell);
+    return false;
   }
 
   /**
@@ -170,7 +156,7 @@ export class Board {
     }
 
     const neighborValues: number[] = [];
-    cell.neighbors.forEach((c) => neighborValues.push(c.value));
+    cell.neighbors.forEach((c) => neighborValues.push(c.realValue));
 
     // For each value found in neighbors, wipe the entry from the possible options
     neighborValues.forEach((value) => {

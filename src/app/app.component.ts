@@ -28,10 +28,18 @@ export class AppComponent implements OnInit {
     this.currentCell.neighbors.forEach((c) => c.focus());
   }
 
-  selectValue(value: number, event: Event) {
+  selectValue(value: number) {
     if (this.currentCell !== undefined && this.currentCell.isAssignable) {
-      this.currentCell.value = value;
+      this.currentCell.userValue = value;
       this.currentCell.show();
+    }
+
+    if (this.board.getRemainingCellsToFill().length === 0) {
+      if (this.board.validate()) {
+        alert('BRAVO!');
+      } else {
+        alert('MISTAKES WERE MADE...');
+      }
     }
   }
 }
