@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Board } from './models/board';
+import { Cell } from './models/cell';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -8,22 +10,28 @@ import { Board } from './models/board';
 })
 export class AppComponent implements OnInit {
   board: Board;
-
-  private value = 1;
+  availableValues: number[] = [];
+  private readonly BOARD_SIZE = 9;
+  private currentCell: Cell;
 
   ngOnInit(): void {
-    this.board = new Board(9);
+    this.board = new Board(this.BOARD_SIZE);
+    for (let i = 1; i <= this.BOARD_SIZE; i++) {
+      this.availableValues.push(i);
+    }
   }
 
-  onClick(rowIndex: number, colIndex: number) {
+  selectCell(rowIndex: number, colIndex: number) {
     this.board.clearFocus();
 
-    const cell = this.board.getCell(rowIndex, colIndex);
-    cell.neighbors.forEach((c) => c.focus());
+    this.currentCell = this.board.getCell(rowIndex, colIndex);
+    this.currentCell.neighbors.forEach((c) => c.focus());
+  }
 
-    if (cell.isAssignable) {
-      cell.value = this.value;
-      cell.show();
+  selectValue(value: number, event: Event) {
+    if (this.currentCell !== undefined && this.currentCell.isAssignable) {
+      this.currentCell.value = value;
+      this.currentCell.show();
     }
   }
 }

@@ -7,6 +7,7 @@ import { Coord } from './coord';
 export class Board {
   private readonly NUM_MIN = 1;
   private readonly NUM_MAX = 9;
+  private readonly NUM_CELLS_TO_HIDE = 2;
   private size: number;
   private _matrix: Cell[][];
 
@@ -37,7 +38,7 @@ export class Board {
     // Hide some cells at random
     // TODO: 2018-08-08 Make it based on difficulty level
     this._matrix.forEach((row) => {
-      for (let i = 0; i < 2; i++) {
+      for (let i = 0; i < this.NUM_CELLS_TO_HIDE; i++) {
         const cell = row[this.getRandomNumber(0, 8)];
         cell.hide();
         cell.isAssignable = true;

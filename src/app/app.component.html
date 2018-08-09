@@ -1,11 +1,17 @@
-<div class="grid">
+<div class="board">
 
   <ng-container *ngFor="let row of board.matrix; let i = index;">
     <ng-container *ngFor="let cell of row; let j = index;">
-      <div class="cell" [class.text-color-light-green]="cell.isFocused" (click)="onClick(i, j)">
+      <div class="cell" [class.text-color-light-green]="cell.isFocused" (click)="selectCell(i, j)">
         <span *ngIf="cell.isVisible">{{cell.value}}</span>
       </div>
     </ng-container>
   </ng-container>
 
+</div>
+
+<div class="cell-selection">
+  <div *ngFor="let value of availableValues" class="cell" (click)="selectValue(value, $event) ">
+    {{value}}
+  </div>
 </div>
