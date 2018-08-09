@@ -33,6 +33,16 @@ export class Board {
 
     // For each cell, assign a coherent value based on its neighbors
     this.assignValueToCells(allCells);
+
+    // Hide some cells at random
+    // TODO: 2018-08-08 Make it based on difficulty level
+    this._matrix.forEach((row) => {
+      for (let i = 0; i < 2; i++) {
+        const cell = row[this.getRandomNumber(0, 8)];
+        cell.hide();
+        cell.isAssignable = true;
+      }
+    });
   }
 
   private assignValueToCells(remainingCells: Cell[]): boolean {
@@ -44,7 +54,7 @@ export class Board {
     for (const value of possibleValues) {
       cell.value = value;
 
-      // Base case: it is the last cell to be processed
+      // Base case: no remaining cells to be processed
       if (remainingCells.length === 0) {
         return true;
       }
@@ -176,7 +186,7 @@ export class Board {
    * Shuffle the values in the given array and returns it. The given array is NOT modified.
    */
   private shuffleArray(array: number[]): number[] {
-    const _array = array;
+    const _array = array.slice();
 
     for (let i = _array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));

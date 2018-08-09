@@ -5,11 +5,11 @@ import { Coord } from './coord';
  */
 export class Cell {
   neighbors: Set<Cell>;
-  private _isFocused: boolean;
+  isAssignable = false;
+  private _isVisible = true;
+  private _isFocused = false;
 
-  constructor(public value: number, public coord: Coord) {
-    this._isFocused = false;
-  }
+  constructor(public value: number, public coord: Coord) {}
 
   get isFocused(): boolean {
     return this._isFocused;
@@ -21,5 +21,17 @@ export class Cell {
 
   unfocus() {
     this._isFocused = false;
+  }
+
+  get isVisible(): boolean {
+    return this._isVisible;
+  }
+
+  show() {
+    this._isVisible = true;
+  }
+
+  hide() {
+    this._isVisible = false;
   }
 }
