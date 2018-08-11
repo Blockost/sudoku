@@ -2,7 +2,7 @@
 
   <ng-container *ngFor="let row of board.getMatrix(); let i = index;">
     <ng-container *ngFor="let cell of row; let j = index;">
-      <div class="cell" [class.text-color-light-green]="cell.isFocused" (click)="selectCell(i, j)">
+      <div class="cell" [class.text-color-red]="cell.isFocused" (click)="selectCell(i, j)">
         <span *ngIf="cell.isVisible">{{cell.userValue}}</span>
       </div>
     </ng-container>

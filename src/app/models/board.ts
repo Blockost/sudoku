@@ -8,6 +8,7 @@ export class Board {
   private readonly NUM_MIN = 1;
   private readonly NUM_MAX = 9;
   private readonly MAX_NUM_CELLS_TO_HIDE = 3;
+  private readonly ALL_CELLS: Cell[] = [];
   private readonly CELLS_TO_FILL = [];
   private size: number;
   private matrix: Cell[][];
@@ -20,21 +21,22 @@ export class Board {
     for (let i = 0; i < this.size; i++) {
       this.matrix[i] = [];
       for (let j = 0; j < this.size; j++) {
-        this.matrix[i][j] = new Cell(new Coord(i, j));
+        const cell = new Cell(new Coord(i, j));
+        this.matrix[i][j] = cell;
+        // Push the cell in the flatten array
+        this.ALL_CELLS.push(cell);
       }
     }
 
-    // Retrieve all cells
-    const allCells: Cell[] = [];
-    this.matrix.forEach((row) => row.forEach((cell) => allCells.push(cell)));
-
     // Assign neighbors to each cell
-    allCells.forEach((cell) => {
+    this.ALL_CELLS.forEach((cell) => {
       cell.neighbors = this.getNeighbors(cell);
     });
 
     // For each cell, assign a coherent value based on its neighbors
-    this.assignValueToCells(allCells);
+    // XXX 2018-08-11 We're using a copy of the original ALL_CELLS array so that the
+    // method below does not affect it
+    this.assignValueToCells(this.ALL_CELLS.slice());
 
     // Hide some cells at random
     // TODO: 2018-08-08 Make it based on difficulty level
@@ -57,6 +59,10 @@ export class Board {
     return this.matrix[rowIndex][colIndex];
   }
 
+  getCellsByValue(value: number) {
+    return this.ALL_CELLS.filter((cell) => cell.userValue === value);
+  }
+
   getCellsToFill(): Cell[] {
     return this.CELLS_TO_FILL;
   }
@@ -65,7 +71,7 @@ export class Board {
     return this.CELLS_TO_FILL.filter((cell) => cell.userValue === 0);
   }
 
-  public validate(): boolean {
+  validate(): boolean {
     // TODO: 2018-08-09 To remove when game is ready for production
     console.log(
       this.CELLS_TO_FILL.filter((cell) => cell.userValue !== cell.realValue)
@@ -76,8 +82,24 @@ export class Board {
     );
   }
 
+  focus(cell: Cell) {
+    cell.neighbors.forEach((c) => c.focus());
+  }
+
+  focusByValue(value: number) {
+    this.ALL_CELLS.filter((cell) => cell.userValue === value).forEach((cell) =>
+      cell.focus()
+    );
+  }
+
   clearFocus() {
-    this.matrix.map((row) => row.map((cell) => cell.unfocus()));
+    this.ALL_CELLS.forEach((cell) => cell.unfocus());
+  }
+
+  clearFocusByValue(value: number) {
+    this.ALL_CELLS.filter((cell) => cell.userValue === value).forEach((cell) =>
+      cell.unfocus()
+    );
   }
 
   /**

@@ -13,6 +13,7 @@ export class AppComponent implements OnInit {
   availableValues: number[] = [];
   private readonly BOARD_SIZE = 9;
   private currentCell: Cell;
+  private currentValue: number;
 
   ngOnInit(): void {
     this.board = new Board(this.BOARD_SIZE);
@@ -22,24 +23,41 @@ export class AppComponent implements OnInit {
   }
 
   selectCell(rowIndex: number, colIndex: number) {
+    // Clear the focus on the previous cells
     this.board.clearFocus();
 
     this.currentCell = this.board.getCell(rowIndex, colIndex);
-    this.currentCell.neighbors.forEach((c) => c.focus());
+    this.board.focus(this.currentCell);
   }
 
   selectValue(value: number) {
-    if (this.currentCell !== undefined && this.currentCell.isFillable) {
-      this.currentCell.userValue = value;
-      this.currentCell.show();
+    if (this.currentCell === undefined || !this.currentCell.isFillable) {
+      return;
     }
 
-    if (this.board.getRemainingCellsToFill().length === 0) {
-      if (this.board.validate()) {
-        alert('BRAVO!');
-      } else {
-        alert('MISTAKES WERE MADE...');
-      }
+    // Clear the focus on the previous cells by value
+    this.board.clearFocusByValue(this.currentValue);
+
+    this.currentValue = value;
+    this.currentCell.userValue = this.currentValue;
+    this.currentCell.show();
+
+    // Focus all the cells with the same value
+    this.board.focusByValue(value);
+
+    // Validate the board
+    this.validate();
+  }
+
+  private validate() {
+    if (this.board.getRemainingCellsToFill().length !== 0) {
+      return;
+    }
+
+    if (this.board.validate()) {
+      alert('BRAVO!');
+    } else {
+      alert('MISTAKES WERE MADE...');
     }
   }
 }
