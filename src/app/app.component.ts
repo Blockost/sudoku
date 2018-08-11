@@ -29,7 +29,7 @@ export class AppComponent implements OnInit {
   }
 
   selectValue(value: number) {
-    if (this.currentCell !== undefined && this.currentCell.isAssignable) {
+    if (this.currentCell !== undefined && this.currentCell.isFillable) {
       this.currentCell.userValue = value;
       this.currentCell.show();
     }

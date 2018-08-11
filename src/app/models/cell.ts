@@ -6,7 +6,7 @@ import { Coord } from './coord';
 export class Cell {
   neighbors: Set<Cell>;
   userValue: number;
-  isAssignable = false;
+  isFillable = false;
   private _realValue: number;
   private _isVisible = true;
   private _isFocused = false;

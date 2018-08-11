@@ -1,0 +1,11 @@
+language: node_js
+node_js:
+  - 'lts/*' # Latest LTS version of NodeJs
+email: true # if set to `false`: no email notifications
+install:
+  - npm install
+scripts: # test build (Continuous Integration)
+  - npm run test
+cache: # Retrieve modules from cache and update when something changes
+  directories:
+    - 'node_modules'
