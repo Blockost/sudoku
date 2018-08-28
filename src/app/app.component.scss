@@ -1,10 +1,13 @@
+$border-color: #98acb7;
+
 .cell {
   display: flex;
   flex: 1 1 calc(100% / 9 - 2px); // 9 items per line
   height: calc(100% / 9 - 2px); // 9 items per line
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.23);
+  background-color: white;
+  color: black;
   text-align: center;
   line-height: 65px;
   font-size: 1.3vw;
@@ -34,6 +37,11 @@
     font-weight: 900;
     color: red;
   }
+
+  &.focused {
+    font-weight: 900;
+    background-color: #98c8e8;
+  }
 }
 
 .cell-selection {
@@ -58,15 +66,15 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid $border-color;
 
   // Add styles to cells that compose the game board
   .cell {
-    border-left: 1px solid rgba(255, 255, 255, 0.3);
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
+    border-left: 1px solid $border-color;
+    border-top: 1px solid $border-color;
 
     &:nth-child(3n) {
-      border-right: 1px solid rgba(255, 255, 255, 0.5);
+      border-right: 1px solid $border-color;
     }
 
     &:nth-child(27n),
@@ -78,7 +86,7 @@
     &:nth-child(27n-6),
     &:nth-child(27n-7),
     &:nth-child(27n-8) {
-      border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+      border-bottom: 1px solid $border-color;
     }
   }
 }
