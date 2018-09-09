@@ -12,6 +12,8 @@ export class Board {
   private readonly CELLS_TO_FILL = [];
   private size: number;
   private matrix: Cell[][];
+  currentCell: Cell;
+  selectedValue: number;
 
   constructor(size: number) {
     this.matrix = [];
@@ -30,7 +32,9 @@ export class Board {
 
     // Assign neighbors to each cell
     this.ALL_CELLS.forEach((cell) => {
-      cell.neighbors = this.getNeighbors(cell);
+      cell.neighborsInRow = this.getRow(cell);
+      cell.neighborsInColumn = this.getColumn(cell);
+      cell.neighborsInSquare = this.getSquare(cell);
     });
 
     // For each cell, assign a coherent value based on its neighbors
@@ -82,8 +86,11 @@ export class Board {
     );
   }
 
-  focus(cell: Cell) {
-    cell.neighbors.forEach((c) => c.focus());
+  focus() {
+    // Do not focus neighbors in the square because it makes the
+    // board unreadable
+    this.currentCell.neighborsInRow.forEach((c) => c.focus());
+    this.currentCell.neighborsInColumn.forEach((c) => c.focus());
   }
 
   focusByValue(value: number) {
@@ -100,44 +107,38 @@ export class Board {
     this.ALL_CELLS.filter((cell) => cell.userValue === value).forEach((cell) =>
       cell.unfocus()
     );
+    this.focus();
   }
 
-  /**
-   * Retreives all the neighbors to a given cell.
-   * Neighbors are all the cells on the same line, column and square.
-   */
-  private getNeighbors(cell: Cell): Set<Cell> {
+  private getRow(cell: Cell): Set<Cell> {
     const neighbors = new Set<Cell>();
 
-    this.getRow(cell).forEach((c) => neighbors.add(c));
-    this.getColumn(cell).forEach((c) => neighbors.add(c));
-    this.getSquare(cell).forEach((c) => neighbors.add(c));
-
+    this.matrix[cell.coord.x].forEach((c) => neighbors.add(c));
     return neighbors;
   }
 
-  private getRow(cell: Cell): Cell[] {
-    return this.matrix[cell.coord.x];
+  private getColumn(cell: Cell): Set<Cell> {
+    const neighbors = new Set<Cell>();
+
+    this.matrix.forEach((row) => neighbors.add(row[cell.coord.y]));
+    return neighbors;
   }
 
-  private getColumn(cell: Cell): Cell[] {
-    return this.matrix.map((row) => row[cell.coord.y]);
-  }
+  private getSquare(cell: Cell): Set<Cell> {
+    const neighbors = new Set<Cell>();
 
-  private getSquare(cell: Cell): Cell[] {
     const squareSize = Math.sqrt(this.size);
     const squareStartRow = Math.floor(cell.coord.x / squareSize) * squareSize;
     const squareStartColumn =
       Math.floor(cell.coord.y / squareSize) * squareSize;
 
-    const cells = [];
     for (let i = squareStartRow; i < squareStartRow + squareSize; i++) {
       for (let j = squareStartColumn; j < squareStartColumn + squareSize; j++) {
-        cells.push(this.matrix[i][j]);
+        neighbors.add(this.matrix[i][j]);
       }
     }
 
-    return cells;
+    return neighbors;
   }
 
   private assignValueToCells(remainingCells: Cell[]): boolean {
@@ -178,7 +179,9 @@ export class Board {
     }
 
     const neighborValues: number[] = [];
-    cell.neighbors.forEach((c) => neighborValues.push(c.realValue));
+    cell.neighborsInRow.forEach((c) => neighborValues.push(c.realValue));
+    cell.neighborsInColumn.forEach((c) => neighborValues.push(c.realValue));
+    cell.neighborsInSquare.forEach((c) => neighborValues.push(c.realValue));
 
     // For each value found in neighbors, wipe the entry from the possible options
     neighborValues.forEach((value) => {

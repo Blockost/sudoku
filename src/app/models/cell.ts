@@ -4,7 +4,9 @@ import { Coord } from './coord';
  * Reprensent a box on the game board.
  */
 export class Cell {
-  neighbors: Set<Cell>;
+  neighborsInRow: Set<Cell>;
+  neighborsInColumn: Set<Cell>;
+  neighborsInSquare: Set<Cell>;
   userValue: number;
   isFillable = false;
   private _realValue: number;

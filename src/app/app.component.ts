@@ -12,8 +12,6 @@ export class AppComponent implements OnInit {
   board: Board;
   availableValues: number[] = [];
   private readonly BOARD_SIZE = 9;
-  private currentCell: Cell;
-  private currentValue: number;
 
   ngOnInit(): void {
     this.board = new Board(this.BOARD_SIZE);
@@ -26,21 +24,22 @@ export class AppComponent implements OnInit {
     // Clear the focus on the previous cells
     this.board.clearFocus();
 
-    this.currentCell = this.board.getCell(rowIndex, colIndex);
-    this.board.focus(this.currentCell);
+    this.board.currentCell = this.board.getCell(rowIndex, colIndex);
+    this.board.focus();
   }
 
   selectValue(value: number) {
-    if (this.currentCell === undefined || !this.currentCell.isFillable) {
+    const currentCell = this.board.currentCell;
+    if (currentCell === undefined || !currentCell.isFillable) {
       return;
     }
 
     // Clear the focus on the previous cells by value
-    this.board.clearFocusByValue(this.currentValue);
+    this.board.clearFocusByValue(this.board.selectedValue);
 
-    this.currentValue = value;
-    this.currentCell.userValue = this.currentValue;
-    this.currentCell.show();
+    this.board.selectedValue = value;
+    this.board.currentCell.userValue = value;
+    this.board.currentCell.show();
 
     // Focus all the cells with the same value
     this.board.focusByValue(value);
