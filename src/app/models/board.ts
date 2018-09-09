@@ -86,6 +86,7 @@ export class Board {
     );
   }
 
+  // Focus the current cell and its neighbors in row and column.
   focus() {
     // Do not focus neighbors in the square because it makes the
     // board unreadable

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Board } from './models/board';
-import { Cell } from './models/cell';
 
 @Component({
   selector: 'app-root',
