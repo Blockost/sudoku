@@ -1,3 +1,5 @@
+// Variables
+$color-baby-blue: #98c8e8;
 $border-color: #98acb7;
 
 .cell {
@@ -40,7 +42,7 @@ $border-color: #98acb7;
 
   &.focused {
     font-weight: 900;
-    background-color: #98c8e8;
+    background-color: $color-baby-blue;
   }
 }
 
@@ -54,7 +56,7 @@ $border-color: #98acb7;
     transition: border-bottom 0.2s ease-in-out;
 
     &:hover {
-      border-bottom: 2px solid cyan;
+      border-bottom: 2px solid $color-baby-blue;
     }
   }
 }
