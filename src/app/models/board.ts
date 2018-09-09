@@ -107,6 +107,8 @@ export class Board {
     this.ALL_CELLS.filter((cell) => cell.userValue === value).forEach((cell) =>
       cell.unfocus()
     );
+    // Because the unfocus method may have removed the focus on neighbors of the
+    // current cell, we re-focus it
     this.focus();
   }
 
