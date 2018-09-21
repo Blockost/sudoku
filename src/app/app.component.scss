@@ -1,5 +1,7 @@
 // Variables
-$color-baby-blue: #98c8e8;
+$color-neighbors-highlight: #adddef;
+$color-cell-selected: #bce1e8;
+$color-panel-highlight: #95d3e4;
 $border-color: #98acb7;
 
 .cell {
@@ -40,13 +42,18 @@ $border-color: #98acb7;
     color: red;
   }
 
-  &.focused {
-    font-weight: 900;
-    background-color: $color-baby-blue;
+  &.selected {
+    //font-weight: 900;
+    background-color: $color-cell-selected;
+  }
+
+  &.highlighted{
+    background-color: $color-neighbors-highlight;
+
   }
 }
 
-.cell-selection {
+.panel-selection {
   display: flex;
   margin: 1% auto;
   width: 40vw;
@@ -56,7 +63,7 @@ $border-color: #98acb7;
     transition: border-bottom 0.2s ease-in-out;
 
     &:hover {
-      border-bottom: 2px solid $color-baby-blue;
+      border-bottom: 2px solid $color-panel-highlight;
     }
   }
 }

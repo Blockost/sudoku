@@ -87,36 +87,38 @@ export class Board {
   }
 
   // Focus the current cell and its neighbors in row and column.
-  focus() {
+  highlight() {
     // Do not focus neighbors in the square because it makes the
     // board unreadable
-    this.currentCell.neighborsInRow.forEach((c) => c.focus());
-    this.currentCell.neighborsInColumn.forEach((c) => c.focus());
+    this.currentCell.neighborsInRow.forEach((c) => c.highlight(true));
+    this.currentCell.neighborsInColumn.forEach((c) => c.highlight(true));
   }
 
-  focusByValue(value: number) {
+  highlightByValue(value: number) {
+    this.ALL_CELLS.filter((cell) => cell.userValue === value)
+      .filter((cell) => cell !== this.currentCell)
+      .forEach((cell) => cell.highlight(true));
+  }
+
+  clearHighlight() {
+    this.ALL_CELLS.forEach((cell) => cell.highlight(false));
+  }
+
+  clearHighlightByValue(value: number) {
     this.ALL_CELLS.filter((cell) => cell.userValue === value).forEach((cell) =>
-      cell.focus()
-    );
-  }
-
-  clearFocus() {
-    this.ALL_CELLS.forEach((cell) => cell.unfocus());
-  }
-
-  clearFocusByValue(value: number) {
-    this.ALL_CELLS.filter((cell) => cell.userValue === value).forEach((cell) =>
-      cell.unfocus()
+      cell.highlight(false)
     );
     // Because the unfocus method may have removed the focus on neighbors of the
     // current cell, we re-focus it
-    this.focus();
+    this.highlight();
   }
 
   private getRow(cell: Cell): Set<Cell> {
     const neighbors = new Set<Cell>();
 
-    this.matrix[cell.coord.x].forEach((c) => neighbors.add(c));
+    this.matrix[cell.coord.x]
+      .filter((c) => c !== cell)
+      .forEach((c) => neighbors.add(c));
     return neighbors;
   }
 
@@ -124,6 +126,9 @@ export class Board {
     const neighbors = new Set<Cell>();
 
     this.matrix.forEach((row) => neighbors.add(row[cell.coord.y]));
+
+    // Remove current cell
+    neighbors.delete(cell);
     return neighbors;
   }
 
@@ -141,6 +146,8 @@ export class Board {
       }
     }
 
+    // Remove current cell
+    neighbors.delete(cell);
     return neighbors;
   }
 

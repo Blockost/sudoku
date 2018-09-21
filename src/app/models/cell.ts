@@ -11,7 +11,8 @@ export class Cell {
   isFillable = false;
   private _realValue: number;
   private _isVisible = true;
-  private _isFocused = false;
+  private _isHighlighted = false;
+  private _isSelected = false;
 
   constructor(public coord: Coord) {}
 
@@ -26,16 +27,24 @@ export class Cell {
     this.userValue = value;
   }
 
-  get isFocused(): boolean {
-    return this._isFocused;
+  get isHighlighted(): boolean {
+    return this._isHighlighted;
   }
 
-  focus() {
-    this._isFocused = true;
+  highlight(highlight: boolean) {
+    this._isHighlighted = highlight;
   }
 
-  unfocus() {
-    this._isFocused = false;
+  select() {
+    this._isSelected = true;
+  }
+
+  unselect() {
+    this._isSelected = false;
+  }
+
+  get isSelected(): boolean {
+    return this._isSelected;
   }
 
   get isVisible(): boolean {

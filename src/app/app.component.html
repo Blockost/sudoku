@@ -2,7 +2,7 @@
 
   <ng-container *ngFor="let row of board.getMatrix(); let i = index;">
     <ng-container *ngFor="let cell of row; let j = index;">
-      <div class="cell" [class.focused]="cell.isFocused" (click)="selectCell(i, j)">
+      <div class="cell" [class.highlighted]="cell.isHighlighted" [class.selected]="cell.isSelected" (click)="selectCell(i, j)">
         <span *ngIf="cell.isVisible">{{cell.userValue}}</span>
       </div>
     </ng-container>
@@ -10,7 +10,7 @@
 
 </div>
 
-<div class="cell-selection">
+<div class="panel-selection">
   <div *ngFor="let value of availableValues" class="cell" (click)="selectValue(value) ">
     {{value}}
   </div>

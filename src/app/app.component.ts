@@ -21,10 +21,14 @@ export class AppComponent implements OnInit {
 
   selectCell(rowIndex: number, colIndex: number) {
     // Clear the focus on the previous cells
-    this.board.clearFocus();
+    this.board.clearHighlight();
+    if (this.board.currentCell) {
+      this.board.currentCell.unselect();
+    }
 
     this.board.currentCell = this.board.getCell(rowIndex, colIndex);
-    this.board.focus();
+    this.board.currentCell.select();
+    this.board.highlight();
   }
 
   selectValue(value: number) {
@@ -34,14 +38,14 @@ export class AppComponent implements OnInit {
     }
 
     // Clear the focus on the previous cells by value
-    this.board.clearFocusByValue(this.board.selectedValue);
+    this.board.clearHighlightByValue(this.board.selectedValue);
 
     this.board.selectedValue = value;
     this.board.currentCell.userValue = value;
     this.board.currentCell.show();
 
     // Focus all the cells with the same value
-    this.board.focusByValue(value);
+    this.board.highlightByValue(value);
 
     // Validate the board
     this.validate();
