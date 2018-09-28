@@ -47,9 +47,12 @@ $border-color: #98acb7;
     background-color: $color-cell-selected;
   }
 
-  &.highlighted{
+  &.highlighted {
     background-color: $color-neighbors-highlight;
+  }
 
+  &.isFillable {
+    font-weight: bold;
   }
 }
 
