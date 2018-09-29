@@ -46,7 +46,8 @@ export class Board {
     // TODO: 2018-08-08 Make it based on difficulty level
     this.matrix.forEach((row) => {
       for (let i = 0; i < this.MAX_NUM_CELLS_TO_HIDE; i++) {
-        const cell = row[this.getRandomNumber(0, 8)];
+        // Select a value between 0 and 8 (9 not inclusive)
+        const cell = row[this.getRandomNumber(0, 9)];
         cell.hide();
         cell.isFillable = true;
         cell.userValue = 0;
