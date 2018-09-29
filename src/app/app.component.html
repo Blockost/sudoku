@@ -12,7 +12,9 @@
 </div>
 
 <div class="panel-selection">
-  <div *ngFor="let value of availableValues" class="cell" (click)="selectValue(value) ">
+  <div *ngFor="let value of availableValues" class="cell" (click)="selectValue(value)">
     {{value}}
   </div>
+  <!-- Special cell to erase a previous value -->
+  <div class="cell far fa-trash-alt" (click)="selectValue(null)"></div>
 </div>

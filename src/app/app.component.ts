@@ -33,12 +33,21 @@ export class AppComponent implements OnInit {
 
   selectValue(value: number) {
     const currentCell = this.board.currentCell;
+
+    // If curentCell is not defined, do nothing
     if (currentCell === undefined || !currentCell.isFillable) {
       return;
     }
 
     // Clear the focus on the previous cells by value
     this.board.clearHighlightByValue(this.board.selectedValue);
+
+    // If value is null, reset userValue back to 0
+    if (value === null) {
+      this.board.currentCell.userValue = 0;
+      this.board.currentCell.hide();
+      return;
+    }
 
     this.board.selectedValue = value;
     this.board.currentCell.userValue = value;
