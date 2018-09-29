@@ -42,13 +42,6 @@ export class AppComponent implements OnInit {
     // Clear the focus on the previous cells by value
     this.board.clearHighlightByValue(this.board.selectedValue);
 
-    // If value is null, reset userValue back to 0
-    if (value === null) {
-      this.board.currentCell.userValue = 0;
-      this.board.currentCell.hide();
-      return;
-    }
-
     this.board.selectedValue = value;
     this.board.currentCell.userValue = value;
     this.board.currentCell.show();
@@ -58,6 +51,16 @@ export class AppComponent implements OnInit {
 
     // Validate the board
     this.validate();
+  }
+
+  removeValue() {
+    // Clear the focus on the previous cells by value
+    this.board.clearHighlightByValue(this.board.selectedValue);
+
+    // Reset userValue back to 0
+    this.board.currentCell.userValue = 0;
+    this.board.currentCell.hide();
+    return;
   }
 
   private validate() {
