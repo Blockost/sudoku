@@ -1,7 +1,7 @@
 // Variables
 $color-neighbors-highlight: #adddef;
 $color-cell-selected: #bce1e8;
-$color-panel-highlight: #95d3e4;
+$color-value-selection: #95d3e4;
 $border-color: #98acb7;
 
 .cell {
@@ -55,7 +55,7 @@ $border-color: #98acb7;
   }
 }
 
-.panel-selection {
+.value-selection {
   display: flex;
   margin: 1% auto;
   width: 40vw;
@@ -65,7 +65,7 @@ $border-color: #98acb7;
     transition: border-bottom 0.2s ease-in-out;
 
     &:hover {
-      border-bottom: 2px solid $color-panel-highlight;
+      border-bottom: 2px solid $color-value-selection;
     }
   }
 }
