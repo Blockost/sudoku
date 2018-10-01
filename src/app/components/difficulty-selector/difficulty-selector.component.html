@@ -1,9 +1,13 @@
-<h3>Game difficulty</h3>
+<h2>Game difficulty</h2>
 
-<mat-list role="list">
+<mat-nav-list role="list">
   <ng-container *ngFor="let difficulty of gameDifficulty">
     <mat-list-item role="listitem" (click)="selectDifficulty(difficulty)">
-      {{difficulty}}
+      <!-- TODO: 2018-09-30 Blockost Add icon based on difficulty level -->
+      <!-- <mat-icon matListIcon>star</mat-icon> -->
+      <!-- <img mat-list-avatar src=""> -->
+      <h2 mat-line>{{difficulty}}</h2>
+      <p mat-line>At most X cells are hidden randomly</p>
     </mat-list-item>
   </ng-container>
-</mat-list>
+</mat-nav-list>

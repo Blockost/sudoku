@@ -13,7 +13,7 @@
   <div *ngFor="let value of availableValues" class="cell" (click)="selectValue(value)">
     {{value}}
   </div>
-  <!-- Special cell to erase a previous value -->
-  <div class="cell far fa-trash-alt" (click)="removeValue()"></div>
-  <div class="cell fas fa-cog" (click)="selectDifficulty()"></div>
+  <!-- Special cell to remove a previous value -->
+  <div class="cell far fa-trash-alt" (click)="removeValue()" matTooltip="Remove the selected value" matTooltipPosition="below"></div>
+  <div class="cell fas fa-cog" (click)="selectDifficulty()" matTooltip="Show game settings" matTooltipPosition="below"></div>
 </div>
