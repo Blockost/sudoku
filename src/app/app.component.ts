@@ -34,11 +34,14 @@ export class AppComponent implements OnInit {
       .afterDismissed()
       // Listen to data returned when the component is dismissed
       .subscribe((difficulty: string) => {
-        // Re-generate the board according to the new game difficulty
-        // chosen by the player
         if (difficulty !== undefined) {
-          this.gameDifficulty = GameDifficulty[difficulty];
-          this.board = new Board(this.BOARD_SIZE, this.gameDifficulty);
+          const newDifficulty = GameDifficulty[difficulty];
+          if (newDifficulty !== this.gameDifficulty) {
+            // Re-generate the board according to the new game difficulty
+            // chosen by the player
+            this.gameDifficulty = newDifficulty;
+            this.board = new Board(this.BOARD_SIZE, this.gameDifficulty);
+          }
         }
       });
   }

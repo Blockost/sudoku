@@ -47,8 +47,6 @@ export class Board {
     // Hide some cells at random
     this.matrix.forEach((row) => {
       for (let i = 0; i < this.maxNumberOfCellsToHide; i++) {
-        console.log(`Hiding ${this.maxNumberOfCellsToHide} cells`);
-
         // Select a value between 0 and 8 (9 not inclusive)
         const cell = row[this.getRandomNumber(0, 9)];
         cell.hide();
