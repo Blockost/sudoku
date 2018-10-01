@@ -1,5 +1,6 @@
 import { Cell } from './cell';
 import { Coord } from './coord';
+import { GameDifficulty } from './game-difficulty';
 
 /**
  * Represents the game board.
@@ -7,17 +8,18 @@ import { Coord } from './coord';
 export class Board {
   private readonly NUM_MIN = 1;
   private readonly NUM_MAX = 9;
-  private readonly MAX_NUM_CELLS_TO_HIDE = 3;
   private readonly ALL_CELLS: Cell[] = [];
   private readonly CELLS_TO_FILL = [];
-  private size: number;
+  private maxNumberOfCellsToHide: number;
   private matrix: Cell[][];
   currentCell: Cell;
   selectedValue: number;
 
-  constructor(size: number) {
+  constructor(private size: number, private gameDifficulty: GameDifficulty) {
     this.matrix = [];
-    this.size = size;
+    this.maxNumberOfCellsToHide = this.getMaxNumberOfCellsToHide(
+      this.gameDifficulty
+    );
 
     // Generate a board full of zero
     for (let i = 0; i < this.size; i++) {
@@ -43,9 +45,10 @@ export class Board {
     this.assignValueToCells(this.ALL_CELLS.slice());
 
     // Hide some cells at random
-    // TODO: 2018-08-08 Make it based on difficulty level
     this.matrix.forEach((row) => {
-      for (let i = 0; i < this.MAX_NUM_CELLS_TO_HIDE; i++) {
+      for (let i = 0; i < this.maxNumberOfCellsToHide; i++) {
+        console.log(`Hiding ${this.maxNumberOfCellsToHide} cells`);
+
         // Select a value between 0 and 8 (9 not inclusive)
         const cell = row[this.getRandomNumber(0, 9)];
         cell.hide();
@@ -87,9 +90,8 @@ export class Board {
     );
   }
 
-  // Focus the current cell and its neighbors in row and column.
   highlight() {
-    // Do not focus neighbors in the square because it makes the
+    // Do not highlight neighbors in the square because it makes the
     // board unreadable
     this.currentCell.neighborsInRow.forEach((c) => c.highlight(true));
     this.currentCell.neighborsInColumn.forEach((c) => c.highlight(true));
@@ -203,6 +205,18 @@ export class Board {
     });
 
     return possibleValues;
+  }
+
+  private getMaxNumberOfCellsToHide(gameDifficulty: GameDifficulty): number {
+    switch (gameDifficulty) {
+      case GameDifficulty.MEDIUM:
+        return 5;
+      case GameDifficulty.HARD:
+        return 7;
+      default:
+        // GameDifficulty.EASY
+        return 3;
+    }
   }
 
   /**

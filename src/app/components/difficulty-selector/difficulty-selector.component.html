@@ -1,0 +1,9 @@
+<h3>Game difficulty</h3>
+
+<mat-list role="list">
+  <ng-container *ngFor="let difficulty of gameDifficulty">
+    <mat-list-item role="listitem" (click)="selectDifficulty(difficulty)">
+      {{difficulty}}
+    </mat-list-item>
+  </ng-container>
+</mat-list>

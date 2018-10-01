@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
+import { MatBottomSheet } from '@angular/material';
+import { DifficultySelectorComponent } from './components/difficulty-selector/difficulty-selector.component';
 import { Board } from './models/board';
+import { GameDifficulty } from './models/game-difficulty';
 
 @Component({
   selector: 'app-root',
@@ -11,12 +14,33 @@ export class AppComponent implements OnInit {
   board: Board;
   availableValues: number[] = [];
   private readonly BOARD_SIZE = 9;
+  private gameDifficulty = GameDifficulty.EASY;
+
+  constructor(private matBottomSheet: MatBottomSheet) {}
 
   ngOnInit(): void {
-    this.board = new Board(this.BOARD_SIZE);
+    this.board = new Board(this.BOARD_SIZE, this.gameDifficulty);
     for (let i = 1; i <= this.BOARD_SIZE; i++) {
       this.availableValues.push(i);
     }
+  }
+
+  selectDifficulty() {
+    this.matBottomSheet
+      // Open a bottom sheet for the player to choose the difficulty of the game
+      .open(DifficultySelectorComponent)
+      // Wait for the player to choose the difficulty and for the bottom
+      // sheet to be dismissed
+      .afterDismissed()
+      // Listen to data returned when the component is dismissed
+      .subscribe((difficulty: string) => {
+        // Re-generate the board according to the new game difficulty
+        // chosen by the player
+        if (difficulty !== undefined) {
+          this.gameDifficulty = GameDifficulty[difficulty];
+          this.board = new Board(this.BOARD_SIZE, this.gameDifficulty);
+        }
+      });
   }
 
   selectCell(rowIndex: number, colIndex: number) {
@@ -54,6 +78,13 @@ export class AppComponent implements OnInit {
   }
 
   removeValue() {
+    const currentCell = this.board.currentCell;
+
+    // If curentCell is not defined, do nothing
+    if (currentCell === undefined || !currentCell.isFillable) {
+      return;
+    }
+
     // Clear the focus on the previous cells by value
     this.board.clearHighlightByValue(this.board.selectedValue);
 
