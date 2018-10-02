@@ -1,6 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 
 @import url('https://fonts.googleapis.com/css?family=Roboto:100');
+// XXX: 2018-10-01 Blockost
+// Import angular theme here because if imported in angular.json's styles declaration,
+// the resulting css is corrupted (font is a lot thicker)
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
 body {
   padding: 0;

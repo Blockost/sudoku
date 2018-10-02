@@ -15,7 +15,6 @@ export class DifficultySelectorComponent {
   selectDifficulty(difficulty: string) {
     // Send the chosen difficulty back to the bottom sheet opener
     // and close it
-
     this.bottomSheetRef.dismiss(difficulty);
   }
 }
