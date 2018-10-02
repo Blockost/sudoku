@@ -4,6 +4,8 @@
 // XXX: 2018-10-01 Blockost
 // Import angular theme here because if imported in angular.json's styles declaration,
 // the resulting css is corrupted (font is a lot thicker)
+// This problem is only reproductible when build with ng build --prod
+// (ng serve rendering things correctly)
 @import '~@angular/material/prebuilt-themes/indigo-pink.css';
 
 body {
