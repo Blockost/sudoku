@@ -1,6 +1,5 @@
 import { Cell } from './cell';
 import { Coord } from './coord';
-import { GameDifficulty } from './game-difficulty';
 
 /**
  * Represents the game board.
@@ -10,16 +9,12 @@ export class Board {
   private readonly NUM_MAX = 9;
   private readonly ALL_CELLS: Cell[] = [];
   private readonly CELLS_TO_FILL = [];
-  private maxNumberOfCellsToHide: number;
   private matrix: Cell[][];
   currentCell: Cell;
   selectedValue: number;
 
-  constructor(private size: number, private gameDifficulty: GameDifficulty) {
+  constructor(private size: number, private difficultyLevel: number) {
     this.matrix = [];
-    this.maxNumberOfCellsToHide = this.getMaxNumberOfCellsToHide(
-      this.gameDifficulty
-    );
 
     // Generate a board full of zero
     for (let i = 0; i < this.size; i++) {
@@ -46,7 +41,7 @@ export class Board {
 
     // Hide some cells at random
     this.matrix.forEach((row) => {
-      for (let i = 0; i < this.maxNumberOfCellsToHide; i++) {
+      for (let i = 0; i < this.difficultyLevel; i++) {
         // Select a value between 0 and 8 (9 not inclusive)
         const cell = row[this.getRandomNumber(0, 9)];
         cell.hide();
@@ -78,10 +73,6 @@ export class Board {
   }
 
   validate(): boolean {
-    // TODO: 2018-08-09 To remove when game is ready for production
-    console.log(
-      this.CELLS_TO_FILL.filter((cell) => cell.userValue !== cell.realValue)
-    );
     return (
       this.CELLS_TO_FILL.filter((cell) => cell.userValue !== cell.realValue)
         .length === 0
@@ -203,18 +194,6 @@ export class Board {
     });
 
     return possibleValues;
-  }
-
-  private getMaxNumberOfCellsToHide(gameDifficulty: GameDifficulty): number {
-    switch (gameDifficulty) {
-      case GameDifficulty.MEDIUM:
-        return 5;
-      case GameDifficulty.HARD:
-        return 7;
-      default:
-        // GameDifficulty.EASY
-        return 3;
-    }
   }
 
   /**

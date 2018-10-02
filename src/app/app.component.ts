@@ -19,7 +19,7 @@ export class AppComponent implements OnInit {
   constructor(private matBottomSheet: MatBottomSheet) {}
 
   ngOnInit(): void {
-    this.board = new Board(this.BOARD_SIZE, this.gameDifficulty);
+    this.board = new Board(this.BOARD_SIZE, this.gameDifficulty.level);
     for (let i = 1; i <= this.BOARD_SIZE; i++) {
       this.availableValues.push(i);
     }
@@ -33,14 +33,14 @@ export class AppComponent implements OnInit {
       // sheet to be dismissed
       .afterDismissed()
       // Listen to data returned when the component is dismissed
-      .subscribe((difficulty: string) => {
-        if (difficulty !== undefined) {
-          const newDifficulty = GameDifficulty[difficulty];
+      .subscribe((difficultyName: string) => {
+        if (difficultyName !== undefined) {
+          const newDifficulty = GameDifficulty.parse(difficultyName);
           if (newDifficulty !== this.gameDifficulty) {
             // Re-generate the board according to the new game difficulty
             // chosen by the player
             this.gameDifficulty = newDifficulty;
-            this.board = new Board(this.BOARD_SIZE, this.gameDifficulty);
+            this.board = new Board(this.BOARD_SIZE, this.gameDifficulty.level);
           }
         }
       });

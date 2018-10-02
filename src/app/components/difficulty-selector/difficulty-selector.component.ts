@@ -8,7 +8,7 @@ import { GameDifficulty } from '../../models/game-difficulty';
   styleUrls: ['./difficulty-selector.component.scss']
 })
 export class DifficultySelectorComponent {
-  gameDifficulty = Object.keys(GameDifficulty);
+  gameDifficulties = GameDifficulty.getList();
 
   constructor(private bottomSheetRef: MatBottomSheetRef) {}
 
