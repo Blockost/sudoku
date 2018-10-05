@@ -1,28 +1,49 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnInit,
+  ViewChild,
+  ViewContainerRef
+} from '@angular/core';
 
 import { MatBottomSheet } from '@angular/material';
 import { DifficultySelectorComponent } from './components/difficulty-selector/difficulty-selector.component';
+import { FireworksComponent } from './components/fireworks/fireworks.component';
 import { Board } from './models/board';
 import { GameDifficulty } from './models/game-difficulty';
+import { ComponentLoaderService } from './services/component-loader.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, AfterViewInit {
   board: Board;
   availableValues: number[] = [];
   private readonly BOARD_SIZE = 9;
   private gameDifficulty = GameDifficulty.EASY;
 
-  constructor(private matBottomSheet: MatBottomSheet) {}
+  @ViewChild('fireworksContainer', { read: ViewContainerRef })
+  private fireworksContainerRef: ViewContainerRef;
+
+  constructor(
+    private componentLoaderService: ComponentLoaderService,
+    private matBottomSheet: MatBottomSheet
+  ) {}
 
   ngOnInit(): void {
     this.board = new Board(this.BOARD_SIZE, this.gameDifficulty.level);
     for (let i = 1; i <= this.BOARD_SIZE; i++) {
       this.availableValues.push(i);
     }
+  }
+
+  ngAfterViewInit() {
+    this.componentLoaderService.addComponent(
+      FireworksComponent,
+      this.fireworksContainerRef
+    );
   }
 
   selectDifficulty() {
