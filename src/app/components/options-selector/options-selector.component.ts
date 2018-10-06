@@ -3,11 +3,11 @@ import { MatBottomSheetRef } from '@angular/material';
 import { GameDifficulty } from '../../models/game-difficulty';
 
 @Component({
-  selector: 'app-difficulty-selector',
-  templateUrl: './difficulty-selector.component.html',
-  styleUrls: ['./difficulty-selector.component.scss']
+  selector: 'app-options-selector',
+  templateUrl: './options-selector.component.html',
+  styleUrls: ['./options-selector.component.scss']
 })
-export class DifficultySelectorComponent {
+export class OptionsSelectorComponent {
   gameDifficulties = GameDifficulty.getList();
 
   constructor(private bottomSheetRef: MatBottomSheetRef) {}

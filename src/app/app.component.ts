@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-
 import { MatBottomSheet, MatDialog } from '@angular/material';
-import { DifficultySelectorComponent } from './components/difficulty-selector/difficulty-selector.component';
+import { OptionsSelectorComponent } from './components/options-selector/options-selector.component';
 import { VictoryDialogComponent } from './components/victory-dialog/victory-dialog.component';
 import { Board } from './models/board';
 import { GameDifficulty } from './models/game-difficulty';
@@ -32,7 +31,7 @@ export class AppComponent implements OnInit {
   selectDifficulty() {
     this.matBottomSheet
       // Open a bottom sheet for the player to choose the difficulty of the game
-      .open(DifficultySelectorComponent)
+      .open(OptionsSelectorComponent)
       // Wait for the player to choose the difficulty and for the bottom
       // sheet to be dismissed
       .afterDismissed()

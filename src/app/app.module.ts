@@ -7,15 +7,15 @@ import { AngularMaterialModule } from './modules/angular-material/angular-materi
 
 // Custom components
 import { AppComponent } from './app.component';
-import { DifficultySelectorComponent } from './components/difficulty-selector/difficulty-selector.component';
 import { FireworksComponent } from './components/fireworks/fireworks.component';
+import { OptionsSelectorComponent } from './components/options-selector/options-selector.component';
 import { VictoryDialogComponent } from './components/victory-dialog/victory-dialog.component';
 
 @NgModule({
   // List of components that will be available to templates
   declarations: [
     AppComponent,
-    DifficultySelectorComponent,
+    OptionsSelectorComponent,
     FireworksComponent,
     VictoryDialogComponent
   ],
@@ -25,7 +25,7 @@ import { VictoryDialogComponent } from './components/victory-dialog/victory-dial
   bootstrap: [AppComponent],
   // List of components that will be build and injected dynamically at runtime
   entryComponents: [
-    DifficultySelectorComponent,
+    OptionsSelectorComponent,
     FireworksComponent,
     VictoryDialogComponent
   ]
