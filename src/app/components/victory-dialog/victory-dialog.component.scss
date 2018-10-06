@@ -1,0 +1,51 @@
+$color-facebook: #3b5999;
+$color-twitter: #55acee;
+$color-google-plus: #dd4b39;
+$color-disabled: #34465d;
+$color-highlight: #adddef;
+
+.highlight {
+  color: $color-highlight;
+  font-weight: bold;
+}
+
+mat-dialog-content {
+  text-align: center;
+}
+
+.social-networks {
+  display: flex;
+  justify-content: space-around;
+}
+
+.share {
+  color: $color-disabled;
+  cursor: pointer;
+
+  &:hover {
+    &.share-facebook {
+      color: $color-facebook;
+    }
+    &.share-twitter {
+      color: $color-twitter;
+    }
+    &.share-google-plus {
+      color: $color-google-plus;
+    }
+  }
+}
+
+img {
+  display: block;
+  width: 40%;
+  margin: 0 auto;
+}
+
+i {
+  font-size: 30px;
+}
+
+.mat-dialog-actions {
+  display: flex;
+  justify-content: space-around;
+}

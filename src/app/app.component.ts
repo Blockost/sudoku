@@ -1,35 +1,25 @@
-import {
-  AfterViewInit,
-  Component,
-  OnInit,
-  ViewChild,
-  ViewContainerRef
-} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import { MatBottomSheet } from '@angular/material';
+import { MatBottomSheet, MatDialog } from '@angular/material';
 import { DifficultySelectorComponent } from './components/difficulty-selector/difficulty-selector.component';
-import { FireworksComponent } from './components/fireworks/fireworks.component';
+import { VictoryDialogComponent } from './components/victory-dialog/victory-dialog.component';
 import { Board } from './models/board';
 import { GameDifficulty } from './models/game-difficulty';
-import { ComponentLoaderService } from './services/component-loader.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, AfterViewInit {
+export class AppComponent implements OnInit {
   board: Board;
   availableValues: number[] = [];
   private readonly BOARD_SIZE = 9;
   private gameDifficulty = GameDifficulty.EASY;
 
-  @ViewChild('fireworksContainer', { read: ViewContainerRef })
-  private fireworksContainerRef: ViewContainerRef;
-
   constructor(
-    private componentLoaderService: ComponentLoaderService,
-    private matBottomSheet: MatBottomSheet
+    private matBottomSheet: MatBottomSheet,
+    private matDialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -37,13 +27,6 @@ export class AppComponent implements OnInit, AfterViewInit {
     for (let i = 1; i <= this.BOARD_SIZE; i++) {
       this.availableValues.push(i);
     }
-  }
-
-  ngAfterViewInit() {
-    this.componentLoaderService.addComponent(
-      FireworksComponent,
-      this.fireworksContainerRef
-    );
   }
 
   selectDifficulty() {
@@ -116,6 +99,13 @@ export class AppComponent implements OnInit, AfterViewInit {
     this.board.currentCell.userValue = 0;
     this.board.currentCell.hide();
     return;
+  }
+
+  victory() {
+    this.matDialog.open(VictoryDialogComponent, {
+      data: this.gameDifficulty,
+      autoFocus: false
+    });
   }
 
   private validate() {

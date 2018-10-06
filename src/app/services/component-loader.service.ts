@@ -15,7 +15,7 @@ export class ComponentLoaderService {
   }
 
   /**
-   * Add a component to the given container.
+   * Add the given component to the given container.
    *
    * @param componentClass the class of the component to be added
    * @param viewContainerRef the container which the component will be added into

@@ -37,11 +37,6 @@ $border-color: #98acb7;
     background: rgba(255, 255, 50, 0.7);
   }
 
-  &.text-color-red {
-    font-weight: 900;
-    color: red;
-  }
-
   &.selected {
     background-color: $color-cell-selected;
   }
