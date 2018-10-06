@@ -101,20 +101,16 @@ export class AppComponent implements OnInit {
     return;
   }
 
-  victory() {
-    this.matDialog.open(VictoryDialogComponent, {
-      data: this.gameDifficulty,
-      autoFocus: false
-    });
-  }
-
   private validate() {
     if (this.board.getRemainingCellsToFill().length !== 0) {
       return;
     }
 
     if (this.board.validate()) {
-      alert('BRAVO!');
+      this.matDialog.open(VictoryDialogComponent, {
+        data: this.gameDifficulty,
+        autoFocus: false
+      });
     } else {
       alert('MISTAKES WERE MADE...');
     }
