@@ -45,6 +45,11 @@ $border-color: #98acb7;
     background-color: $color-neighbors-highlight;
   }
 
+  &.isConflicting {
+    color: red;
+    font-weight: bolder;
+  }
+
   &.isFillable {
     font-weight: bold;
   }

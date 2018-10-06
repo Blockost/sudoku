@@ -82,26 +82,35 @@ export class Board {
   highlight() {
     // Do not highlight neighbors in the square because it makes the
     // board unreadable
-    this.currentCell.neighborsInRow.forEach((c) => c.highlight(true));
-    this.currentCell.neighborsInColumn.forEach((c) => c.highlight(true));
+    this.currentCell.neighborsInRow.forEach((c) => (c.highlight = true));
+    this.currentCell.neighborsInColumn.forEach((c) => (c.highlight = true));
+  }
+
+  clearHighlight() {
+    this.ALL_CELLS.forEach((cell) => {
+      cell.highlight = false;
+      cell.isConflicting = false;
+    });
   }
 
   highlightByValue(value: number) {
     this.ALL_CELLS.filter((cell) => cell.userValue === value)
       .filter((cell) => cell !== this.currentCell)
-      .forEach((cell) => cell.highlight(true));
-  }
-
-  clearHighlight() {
-    this.ALL_CELLS.forEach((cell) => cell.highlight(false));
+      .forEach((cell) => {
+        cell.highlight = true;
+        cell.isConflicting = cell.isNeighborOf(this.currentCell);
+      });
   }
 
   clearHighlightByValue(value: number) {
-    this.ALL_CELLS.filter((cell) => cell.userValue === value).forEach((cell) =>
-      cell.highlight(false)
+    this.ALL_CELLS.filter((cell) => cell.userValue === value).forEach(
+      (cell) => {
+        cell.highlight = false;
+        cell.isConflicting = false;
+      }
     );
-    // Because the unfocus method may have removed the focus on neighbors of the
-    // current cell, we re-focus it
+    // Because the clearHighlight method may have removed the highlight on
+    // neighbors of the current cell, we re-highlight them
     this.highlight();
   }
 

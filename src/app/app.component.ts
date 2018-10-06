@@ -70,14 +70,14 @@ export class AppComponent implements OnInit {
       return;
     }
 
-    // Clear the focus on the previous cells by value
+    // Clear the highlighting on the previous cells by value
     this.board.clearHighlightByValue(this.board.selectedValue);
 
     this.board.selectedValue = value;
     this.board.currentCell.userValue = value;
     this.board.currentCell.show();
 
-    // Focus all the cells with the same value
+    // Highlight all the cells with the same value
     this.board.highlightByValue(value);
 
     // Validate the board

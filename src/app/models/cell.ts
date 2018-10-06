@@ -9,9 +9,10 @@ export class Cell {
   neighborsInSquare: Set<Cell>;
   userValue: number;
   isFillable = false;
+  highlight = false;
+  isConflicting = false;
   private _realValue: number;
   private _isVisible = true;
-  private _isHighlighted = false;
   private _isSelected = false;
 
   constructor(public coord: Coord) {}
@@ -28,11 +29,7 @@ export class Cell {
   }
 
   get isHighlighted(): boolean {
-    return this._isHighlighted;
-  }
-
-  highlight(highlight: boolean) {
-    this._isHighlighted = highlight;
+    return this.highlight;
   }
 
   select() {
@@ -57,5 +54,13 @@ export class Cell {
 
   hide() {
     this._isVisible = false;
+  }
+
+  isNeighborOf(cell: Cell) {
+    return (
+      this.neighborsInRow.has(cell) ||
+      this.neighborsInColumn.has(cell) ||
+      this.neighborsInSquare.has(cell)
+    );
   }
 }
