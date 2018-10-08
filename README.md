@@ -1,4 +1,4 @@
-# Sudoku
+# Sudoku [![Build Status](https://travis-ci.com/Blockost/sudoku.svg?branch=master)](https://travis-ci.com/Blockost/sudoku)
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.0.7.
 
