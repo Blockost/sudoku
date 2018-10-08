@@ -4,6 +4,7 @@ import { OptionsSelectorComponent } from './components/options-selector/options-
 import { VictoryDialogComponent } from './components/victory-dialog/victory-dialog.component';
 import { Board } from './models/board';
 import { GameDifficulty } from './models/game-difficulty';
+import { GameOptions } from './models/game-options';
 
 @Component({
   selector: 'app-root',
@@ -14,39 +15,27 @@ export class AppComponent implements OnInit {
   board: Board;
   availableValues: number[] = [];
   private readonly BOARD_SIZE = 9;
-  private gameDifficulty = GameDifficulty.EASY;
 
-  constructor(
-    private matBottomSheet: MatBottomSheet,
-    private matDialog: MatDialog
-  ) {}
+  constructor(private matBottomSheet: MatBottomSheet, private matDialog: MatDialog) {}
 
   ngOnInit(): void {
-    this.board = new Board(this.BOARD_SIZE, this.gameDifficulty.level);
+    const gameOptions = new GameOptions(GameDifficulty.EASY, true);
+    this.board = new Board(this.BOARD_SIZE, gameOptions);
     for (let i = 1; i <= this.BOARD_SIZE; i++) {
       this.availableValues.push(i);
     }
   }
 
   selectDifficulty() {
+    const _gameOptions = Object.assign({}, this.board.gameOptions);
     this.matBottomSheet
       // Open a bottom sheet for the player to choose the difficulty of the game
-      .open(OptionsSelectorComponent)
+      .open(OptionsSelectorComponent, { data: _gameOptions })
       // Wait for the player to choose the difficulty and for the bottom
       // sheet to be dismissed
       .afterDismissed()
       // Listen to data returned when the component is dismissed
-      .subscribe((difficultyName: string) => {
-        if (difficultyName !== undefined) {
-          const newDifficulty = GameDifficulty.parse(difficultyName);
-          if (newDifficulty !== this.gameDifficulty) {
-            // Re-generate the board according to the new game difficulty
-            // chosen by the player
-            this.gameDifficulty = newDifficulty;
-            this.board = new Board(this.BOARD_SIZE, this.gameDifficulty.level);
-          }
-        }
-      });
+      .subscribe(this.processNewGameOptions.bind(this));
   }
 
   selectCell(rowIndex: number, colIndex: number) {
@@ -107,11 +96,34 @@ export class AppComponent implements OnInit {
 
     if (this.board.validate()) {
       this.matDialog.open(VictoryDialogComponent, {
-        data: this.gameDifficulty,
+        data: this.board.gameOptions.gameDifficulty,
         autoFocus: false
       });
     } else {
       alert('MISTAKES WERE MADE...');
+    }
+  }
+
+  private processNewGameOptions(newGameOptions: GameOptions) {
+    const oldGameOptions = this.board.gameOptions;
+    if (newGameOptions === undefined) {
+      return;
+    }
+
+    if (newGameOptions === oldGameOptions) {
+      return;
+    }
+
+    if (newGameOptions.gameDifficulty !== oldGameOptions.gameDifficulty) {
+      // Re-generate the board according to the new game options chosen by the player
+      this.board.gameOptions = newGameOptions;
+      this.board = new Board(this.BOARD_SIZE, newGameOptions);
+      return;
+    }
+
+    if (newGameOptions.showConflictingCells !== oldGameOptions.showConflictingCells) {
+      this.board.gameOptions = newGameOptions;
+      this.board.clearConflictingCells();
     }
   }
 }

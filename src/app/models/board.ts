@@ -1,5 +1,6 @@
 import { Cell } from './cell';
 import { Coord } from './coord';
+import { GameOptions } from './game-options';
 
 /**
  * Represents the game board.
@@ -13,7 +14,7 @@ export class Board {
   currentCell: Cell;
   selectedValue: number;
 
-  constructor(private size: number, private difficultyLevel: number) {
+  constructor(private size: number, public gameOptions: GameOptions) {
     this.matrix = [];
 
     // Generate a board full of zero
@@ -41,7 +42,7 @@ export class Board {
 
     // Hide some cells at random
     this.matrix.forEach((row) => {
-      for (let i = 0; i < this.difficultyLevel; i++) {
+      for (let i = 0; i < this.gameOptions.gameDifficulty.level; i++) {
         // Select a value between 0 and 8 (9 not inclusive)
         const cell = row[this.getRandomNumber(0, 9)];
         cell.hide();
@@ -73,10 +74,7 @@ export class Board {
   }
 
   validate(): boolean {
-    return (
-      this.CELLS_TO_FILL.filter((cell) => cell.userValue !== cell.realValue)
-        .length === 0
-    );
+    return this.CELLS_TO_FILL.filter((cell) => cell.userValue !== cell.realValue).length === 0;
   }
 
   highlight() {
@@ -87,10 +85,8 @@ export class Board {
   }
 
   clearHighlight() {
-    this.ALL_CELLS.forEach((cell) => {
-      cell.highlight = false;
-      cell.isConflicting = false;
-    });
+    this.ALL_CELLS.forEach((cell) => (cell.highlight = false));
+    this.clearConflictingCells();
   }
 
   highlightByValue(value: number) {
@@ -98,28 +94,34 @@ export class Board {
       .filter((cell) => cell !== this.currentCell)
       .forEach((cell) => {
         cell.highlight = true;
-        cell.isConflicting = cell.isNeighborOf(this.currentCell);
+        this.highlightIfConflicting(cell);
       });
   }
 
   clearHighlightByValue(value: number) {
     this.ALL_CELLS.filter((cell) => cell.userValue === value).forEach(
-      (cell) => {
-        cell.highlight = false;
-        cell.isConflicting = false;
-      }
+      (cell) => (cell.highlight = false)
     );
+    this.clearConflictingCells();
     // Because the clearHighlight method may have removed the highlight on
     // neighbors of the current cell, we re-highlight them
     this.highlight();
   }
 
+  highlightIfConflicting(cell: Cell) {
+    if (this.gameOptions.showConflictingCells) {
+      cell.isConflicting = cell.isNeighborOf(this.currentCell);
+    }
+  }
+
+  clearConflictingCells() {
+    this.ALL_CELLS.forEach((cell) => (cell.isConflicting = false));
+  }
+
   private getRow(cell: Cell): Set<Cell> {
     const neighbors = new Set<Cell>();
 
-    this.matrix[cell.coord.x]
-      .filter((c) => c !== cell)
-      .forEach((c) => neighbors.add(c));
+    this.matrix[cell.coord.x].filter((c) => c !== cell).forEach((c) => neighbors.add(c));
     return neighbors;
   }
 
@@ -138,8 +140,7 @@ export class Board {
 
     const squareSize = Math.sqrt(this.size);
     const squareStartRow = Math.floor(cell.coord.x / squareSize) * squareSize;
-    const squareStartColumn =
-      Math.floor(cell.coord.y / squareSize) * squareSize;
+    const squareStartColumn = Math.floor(cell.coord.y / squareSize) * squareSize;
 
     for (let i = squareStartRow; i < squareStartRow + squareSize; i++) {
       for (let j = squareStartColumn; j < squareStartColumn + squareSize; j++) {
@@ -154,9 +155,7 @@ export class Board {
 
   private assignValueToCells(remainingCells: Cell[]): boolean {
     const cell = remainingCells.shift();
-    const possibleValues = this.shuffleArray(
-      this.getPossibleValuesForCell(cell)
-    );
+    const possibleValues = this.shuffleArray(this.getPossibleValuesForCell(cell));
 
     for (const value of possibleValues) {
       cell.realValue = value;

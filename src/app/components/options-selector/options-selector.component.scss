@@ -1,4 +1,17 @@
+$color-selected: rgba(63, 81, 181, 0.6);
+$color-selected-hover: rgb(63, 81, 181);
+
 .icon {
   width: 60px !important;
   height: 60px !important;
+}
+
+.options-button {
+  display: flex;
+  justify-content: space-around;
+}
+
+.selected {
+  border-top: 2px solid $color-selected;
+  border-bottom: 2px solid $color-selected;
 }

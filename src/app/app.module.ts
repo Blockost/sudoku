@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AngularMaterialModule } from './modules/angular-material/angular-material.module';
 
 // Custom components
+import { FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { FireworksComponent } from './components/fireworks/fireworks.component';
 import { OptionsSelectorComponent } from './components/options-selector/options-selector.component';
@@ -19,7 +20,12 @@ import { VictoryDialogComponent } from './components/victory-dialog/victory-dial
     FireworksComponent,
     VictoryDialogComponent
   ],
-  imports: [BrowserModule, BrowserAnimationsModule, AngularMaterialModule],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    AngularMaterialModule,
+    FormsModule
+  ],
   // List of components that will be available for injection
   providers: [],
   bootstrap: [AppComponent],

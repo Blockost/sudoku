@@ -3,7 +3,8 @@ import { NgModule } from '@angular/core';
 import {
   MatBottomSheetModule,
   MatButtonModule,
-  MatDialogModule
+  MatDialogModule,
+  MatSlideToggleModule
 } from '@angular/material';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
@@ -16,7 +17,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     MatTooltipModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSlideToggleModule
   ],
   exports: [
     MatBottomSheetModule,
@@ -24,7 +26,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatIconModule,
     MatTooltipModule,
     MatDialogModule,
-    MatButtonModule
+    MatButtonModule,
+    MatSlideToggleModule
   ],
   declarations: []
 })

@@ -1,11 +1,26 @@
 <h2>Game Options</h2>
 
+<mat-slide-toggle color="primary" [(ngModel)]="gameOptions.showConflictingCells" [disabled]="">
+  <ng-container *ngIf="gameOptions.showConflictingCells">
+    Conflicting cells will be highlighted in red
+  </ng-container>
+  <ng-container *ngIf="!gameOptions.showConflictingCells">
+    Conflicting cells will not be highlighted
+  </ng-container>
+</mat-slide-toggle>
+
+<h3>Game Difficulty</h3>
 <mat-nav-list role="list">
   <ng-container *ngFor="let gameDifficulty of gameDifficulties">
-    <mat-list-item role="listitem" (click)="selectDifficulty(gameDifficulty.name)">
-      <img mat-list-avatar class="icon" src="../../../assets/img/icons/{{gameDifficulty.icon}}">
+    <mat-list-item [class.selected]="gameDifficulty === gameOptions.gameDifficulty" role="listitem" (click)="selectDifficulty(gameDifficulty.name)">
+      <img mat-list-avatar class="icon" src="/assets/img/icons/{{gameDifficulty.icon}}">
       <h2 mat-line class="title">{{gameDifficulty.name}}</h2>
       <p mat-line>{{gameDifficulty.description}}</p>
     </mat-list-item>
   </ng-container>
 </mat-nav-list>
+<br>
+<div class="options-button">
+  <button mat-button (click)="cancel()">Cancel</button>
+  <button mat-button (click)="apply()">Apply</button>
+</div>

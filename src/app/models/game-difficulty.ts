@@ -33,7 +33,7 @@ export class GameDifficulty {
       case 'Hard':
         return GameDifficulty.HARD;
       default:
-        throw new Error(`Difficulty name ${difficultyName} is not parseable`);
+        throw new Error(`Unknown difficulty '${difficultyName}'`);
     }
   }
 }
