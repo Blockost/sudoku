@@ -3,15 +3,26 @@
 <h1 mat-dialog-title>Congratulations, you won this Sudoky board in
   <span class="highlight">{{gameDifficulty.name}}</span> mode
 </h1>
+
 <mat-dialog-content>
   <img src="/assets/img/icons/{{gameDifficulty.icon}}" alt="difficulty level">
   <h2>Share your achievement on social medias:</h2>
   <div class="social-networks">
-    <div class="share share-facebook">Facebook <i class="fab fa-facebook"></i></div>
-    <div class="share share-twitter">Twitter <i class="fab fa-twitter"></i></div>
-    <div class="share share-google-plus">Google+ <i class="fab fa-google-plus-g"></i></div>
+    <!-- Share on Facebook button -->
+    <div class="share share-facebook" (click)="shareOnFacebook()">
+      Facebook <i class="fab fa-facebook"></i>
+    </div>
+    <!-- Share on Twitter button -->
+    <div class="share share-twitter" (click)="shareOnTwitter()">
+      Twitter <i class="fab fa-twitter"></i>
+    </div>
+    <!-- Share on Google+ button -->
+    <div class="share share-google-plus" (click)="shareOnGooglePlus()">
+      Google+ <i class="fab fa-google-plus-g"></i>
+    </div>
   </div>
 </mat-dialog-content>
+
 <br>
 <mat-dialog-actions class="content-center">
   <button mat-button mat-dialog-close>Leave me alone!</button>

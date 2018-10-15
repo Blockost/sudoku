@@ -3,6 +3,14 @@
 
 <head>
   <meta charset="utf-8">
+  <!-- Open Graph properties for the Facebook crawler -->
+  <meta property="fb:app_id" content="260112434675511" />
+  <meta property="og:url" content="https://blockost-sudoku.herokuapp.com" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Sudoku game" />
+  <meta property="og:description" content="Simple, clean and minimalist sudoku game board for everyone" />
+  <meta property="og:image" content="/assets/img/icons/icon-difficulty-hard.svg" />
+
   <title>Sudoku</title>
   <base href="/">
 
@@ -21,6 +29,19 @@
 
 <body>
   <app-root></app-root>
+
+  <!-- Load and initialize Facebook Javascript SDK -->
+  <script type="text/javascript" src="https://connect.facebook.net/en_US/sdk.js"></script>
+  <script>
+    window.fbAsyncInit = function () {
+      FB.init({
+        appId: '260112434675511',
+        xfbml: true,
+        version: 'v3.1'
+      });
+      FB.AppEvents.logPageView();
+    };
+  </script>
 </body>
 
 </html>
