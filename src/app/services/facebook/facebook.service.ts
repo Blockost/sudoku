@@ -13,7 +13,7 @@ export class FacebookService {
   openShareDialog() {
     const shareParams = {
       method: 'share',
-      href: 'http://blockost-sudoku.herokuapp.com',
+      href: 'https://blockost-sudoku.herokuapp.com',
       hashtag: '#sudoku'
     };
 
