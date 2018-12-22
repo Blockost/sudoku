@@ -14,8 +14,11 @@
   <meta property="og:image:type" content="image/jpeg" />
 
   <!-- CSP config (load resources from these trusted origins only; prevent XSS attacks) -->
+  <!-- Unfortunately, 'unsafe-inline' is still required because <style> tags are created 
+    dynamically by angular and Facebook SDK 
+    See: https://github.com/angular/angular-cli/issues/3430 -->
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
-  style-src 'self' https://use.fontawesome.com https://fonts.googleapis.com; 
+  style-src 'self' https://use.fontawesome.com https://fonts.googleapis.com 'unsafe-inline'; 
   script-src 'self' https://connect.facebook.net; 
   font-src 'self' data: https://use.fontawesome.com https://fonts.gstatic.com"/>
 
