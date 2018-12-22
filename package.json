@@ -1,11 +1,11 @@
 {
   "name": "sudoku",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "scripts": {
-    "postinstall": "ng build --prod",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --prod",
     "test": "npm run lint",
     "lint": "ng lint --format stylish"
   },
