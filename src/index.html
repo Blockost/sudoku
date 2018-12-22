@@ -13,6 +13,13 @@
   <meta property="og:image:url" content="https://sudoku.blockost.com/assets/img/open-graph/thumbnail_1.jpg">
   <meta property="og:image:type" content="image/jpeg" />
 
+  <!-- CSP config (load resources from these trusted origins only; prevent XSS attacks) -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
+  style-src 'self' https://use.fontawesome.com https://fonts.googleapis.com; 
+  script-src 'self' https://connect.facebook.net; 
+  font-src 'self' data: https://use.fontawesome.com https://fonts.gstatic.com"/>
+
+
   <title>Sudoku</title>
   <base href="/">
 
@@ -34,16 +41,7 @@
 
   <!-- Load and initialize Facebook Javascript SDK -->
   <script type="text/javascript" src="https://connect.facebook.net/en_US/sdk.js"></script>
-  <script>
-    window.fbAsyncInit = function () {
-      FB.init({
-        appId: '260112434675511',
-        xfbml: true,
-        version: 'v3.1'
-      });
-      FB.AppEvents.logPageView();
-    };
-  </script>
+  <script type="text/javascript" src="/assets/js/initFbApi.js"></script>
 </body>
 
 </html>
